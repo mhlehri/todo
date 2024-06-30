@@ -4,7 +4,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 type TTodo = {
   title: string;
   description: string;
-  isCompleted: boolean;
+  isCompleted?: boolean;
 };
 
 type TInitialState = {

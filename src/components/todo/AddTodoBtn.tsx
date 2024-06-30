@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -11,8 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "../ui/textarea";
+import { handleSubmit } from "@/actions/handleSubmit";
+import { useAppDispatch } from "@/redux/hook";
+import { addTodo } from "@/redux/features/todoSlice";
 
 export function AddTodoBtn() {
+  const dispatch = useAppDispatch();
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -25,31 +30,43 @@ export function AddTodoBtn() {
             Fill in the form below to add a new todo.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="title" className="text-right">
-              Title
-            </Label>
-            <Input
-              id="title"
-              defaultValue="Add new feature"
-              className="col-span-3"
-            />
+        <form
+          action={async (formData) => {
+            const res = await handleSubmit(formData);
+            console.log(res, "res");
+            dispatch(addTodo(res));
+          }}
+        >
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="title" className="text-right">
+                Title
+              </Label>
+              <Input
+                id="title"
+                name="title"
+                defaultValue="Add new feature"
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label htmlFor="description" className="text-right">
+                Description
+              </Label>
+              <Textarea
+                id="description"
+                name="description"
+                defaultValue="Add a new feature to the app"
+                className="col-span-3"
+              />
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-start gap-4">
-            <Label htmlFor="description" className="text-right">
-              Description
-            </Label>
-            <Textarea
-              id="description"
-              defaultValue="Add a new feature to the app"
-              className="col-span-3"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Submit</Button>
-        </DialogFooter>
+          <DialogFooter>
+            <DialogClose>
+              <Button type="submit">Submit</Button>
+            </DialogClose>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

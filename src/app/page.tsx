@@ -9,7 +9,9 @@ export default function Home() {
   const dispatch = useAppDispatch();
   return (
     <Container>
-      <h1 className="text-center text-5xl">Todo App</h1>
+      <h1 className="text-center text-5xl text-primary font-semibold pt-10">
+        Todo App
+      </h1>
       <div className="flex justify-between my-8">
         <AddTodoBtn />
         {/* <FilterTodo /> */}
