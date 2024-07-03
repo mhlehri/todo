@@ -15,11 +15,13 @@ import { Textarea } from "../ui/textarea";
 import { handleAddTodo } from "@/actions/handleSubmit";
 import { useAppDispatch } from "@/redux/hook";
 import { addTodo } from "@/redux/features/todoSlice";
+import { useState } from "react";
 
 export function AddTodoBtn() {
   const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Add todo</Button>
       </DialogTrigger>
@@ -35,6 +37,7 @@ export function AddTodoBtn() {
             const res = await handleAddTodo(formData);
             console.log(res, "res");
             dispatch(addTodo(res));
+            setOpen(false);
           }}
         >
           <div className="grid gap-4 py-4">
@@ -42,29 +45,24 @@ export function AddTodoBtn() {
               <Label htmlFor="title" className="text-right">
                 Title
               </Label>
-              <Input
-                id="title"
-                name="title"
-                defaultValue="Add new feature"
-                className="col-span-3"
-              />
+              <Input required id="title" name="title" className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-start gap-4">
               <Label htmlFor="description" className="text-right">
                 Description
               </Label>
               <Textarea
+                required
                 id="description"
                 name="description"
-                defaultValue="Add a new feature to the app"
                 className="col-span-3"
               />
             </div>
           </div>
           <DialogFooter>
-            <DialogClose>
-              <Button type="submit">Submit</Button>
-            </DialogClose>
+            <Button type="submit">
+              <span>Add todo</span>
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

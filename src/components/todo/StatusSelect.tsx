@@ -11,22 +11,27 @@ import { updateStatus, updateTodo } from "@/redux/features/todoSlice";
 
 export default function StatusSelect(data: {
   id: string;
-  isCompleted: boolean;
+  isCompleted: string;
 }) {
   const dispatch = useAppDispatch();
-  const dis = () => {
-    dispatch(updateStatus({ id: data.id, completed: !data.isCompleted }));
+  const dis = (value: string) => {
+    dispatch(
+      updateStatus({
+        id: data.id,
+        completed: value,
+      })
+    );
   };
   return (
-    <Select onValueChange={dis}>
+    <Select onValueChange={dis} defaultValue={data.isCompleted}>
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder={data.isCompleted ? "done" : "pending"} />
+        <SelectValue placeholder={data.isCompleted} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="pending" className="bg-orange-200 text-orange-800">
+        <SelectItem value="Pending" className="bg-orange-200 text-orange-800">
           Pending
         </SelectItem>
-        <SelectItem value="done" className="bg-green-200 text-green-800">
+        <SelectItem value="Done" className="bg-green-200 text-green-800">
           Done
         </SelectItem>
       </SelectContent>

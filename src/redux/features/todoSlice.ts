@@ -5,7 +5,7 @@ type TTodo = {
   id: string;
   title: string;
   description: string;
-  isCompleted?: boolean;
+  isCompleted?: string;
 };
 
 type TInitialState = {
@@ -21,7 +21,7 @@ const todoSlice = createSlice({
   initialState,
   reducers: {
     addTodo: (state, action: PayloadAction<TTodo>) => {
-      state.todos.push({ ...action.payload, isCompleted: false });
+      state.todos.push({ ...action.payload, isCompleted: "Pending" });
     },
     updateTodo: (state, action: PayloadAction<TTodo>) => {
       console.log(action.payload);
@@ -31,7 +31,7 @@ const todoSlice = createSlice({
     },
     updateStatus: (
       state,
-      action: PayloadAction<{ id: string; completed: boolean }>
+      action: PayloadAction<{ id: string; completed: string }>
     ) => {
       state.todos = state.todos.map((todo) =>
         todo.id === action.payload.id

@@ -69,6 +69,7 @@ import StatusSelect from "./StatusSelect";
 export function TodoTable() {
   const invoices = useAppSelector((state) => state.todos.todos);
   const dispatch = useAppDispatch();
+
   return (
     <Table className="border rounded-lg">
       <TableCaption>A list of your recent invoices.</TableCaption>
@@ -85,19 +86,10 @@ export function TodoTable() {
         {invoices.length ? (
           invoices.map((invoice, i) => (
             <TableRow key={i}>
-              <TableCell className="font-medium">{invoice.id}</TableCell>
+              <TableCell className="font-medium">{invoice.id!}</TableCell>
               <TableCell className="font-medium">{invoice.title}</TableCell>
               <TableCell>{invoice.description}</TableCell>
               <TableCell>
-                {/* {invoice.isCompleted ? (
-                  <span className="text-green-500 bg-green-400/20 rounded-full p-1">
-                    done
-                  </span>
-                ) : (
-                  <span className="text-orange-500 bg-orange-400/20 rounded-full p-1">
-                    pending
-                  </span>
-                )} */}
                 <StatusSelect
                   id={invoice.id}
                   isCompleted={invoice.isCompleted!}
@@ -105,7 +97,9 @@ export function TodoTable() {
               </TableCell>
 
               <TableCell className="text-right space-x-2">
-                {invoice.isCompleted ? null : <UpdateTodoBtn data={invoice} />}
+                {invoice.isCompleted !== "Pending" ? null : (
+                  <UpdateTodoBtn data={invoice} />
+                )}
                 <Button
                   variant="destructive"
                   onClick={() => dispatch(removeTodo(invoice.id))}
