@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -12,8 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "../ui/textarea";
 import { Edit } from "lucide-react";
+import { handleUpdateTodo } from "@/actions/handleSubmit";
+import { useAppDispatch } from "@/redux/hook";
+import { updateTodo } from "@/redux/features/todoSlice";
 
-export function UpdateTodoBtn() {
+export function UpdateTodoBtn({ data }) {
+  const dispatch = useAppDispatch();
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -28,31 +33,46 @@ export function UpdateTodoBtn() {
             Fill in the form below to add a new todo.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="title" className="text-right">
-              Title
-            </Label>
-            <Input
-              id="title"
-              defaultValue="Add new feature"
-              className="col-span-3"
-            />
+        <form
+          action={async (formData) => {
+            const res = await handleUpdateTodo(formData);
+            const Mdata = {
+              id: data.id,
+              ...res,
+            };
+            dispatch(updateTodo(Mdata));
+          }}
+        >
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="title" className="text-right">
+                Title
+              </Label>
+              <Input
+                name="title"
+                defaultValue={data.title}
+                id="title"
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label htmlFor="description" className="text-right">
+                Description
+              </Label>
+              <Textarea
+                name="description"
+                defaultValue={data.description}
+                id="description"
+                className="col-span-3"
+              />
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-start gap-4">
-            <Label htmlFor="description" className="text-right">
-              Description
-            </Label>
-            <Textarea
-              id="description"
-              defaultValue="Add a new feature to the app"
-              className="col-span-3"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Submit</Button>
-        </DialogFooter>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="submit">Submit</Button>
+            </DialogClose>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

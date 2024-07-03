@@ -10,7 +10,16 @@ import {
 import { Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { UpdateTodoBtn } from "./UpdateTodoBtn";
-import { useAppSelector } from "@/redux/hook";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { removeTodo } from "@/redux/features/todoSlice";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import StatusSelect from "./StatusSelect";
 
 // const invoices = [
 //   {
@@ -59,11 +68,13 @@ import { useAppSelector } from "@/redux/hook";
 
 export function TodoTable() {
   const invoices = useAppSelector((state) => state.todos.todos);
+  const dispatch = useAppDispatch();
   return (
     <Table className="border rounded-lg">
       <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
         <TableRow>
+          <TableHead>id</TableHead>
           <TableHead>Title</TableHead>
           <TableHead>description</TableHead>
           <TableHead>status</TableHead>
@@ -71,21 +82,49 @@ export function TodoTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice, i) => (
-          <TableRow key={i}>
-            <TableCell className="font-medium">{invoice.title}</TableCell>
-            <TableCell>{invoice.description}</TableCell>
-            <TableCell>
-              {invoice.isCompleted ? "completed" : "in-progress"}
-            </TableCell>
-            <TableCell className="text-right space-x-2">
-              <UpdateTodoBtn />
-              <Button variant="destructive">
-                <Trash2 className="size-4" />
-              </Button>
+        {invoices.length ? (
+          invoices.map((invoice, i) => (
+            <TableRow key={i}>
+              <TableCell className="font-medium">{invoice.id}</TableCell>
+              <TableCell className="font-medium">{invoice.title}</TableCell>
+              <TableCell>{invoice.description}</TableCell>
+              <TableCell>
+                {/* {invoice.isCompleted ? (
+                  <span className="text-green-500 bg-green-400/20 rounded-full p-1">
+                    done
+                  </span>
+                ) : (
+                  <span className="text-orange-500 bg-orange-400/20 rounded-full p-1">
+                    pending
+                  </span>
+                )} */}
+                <StatusSelect
+                  id={invoice.id}
+                  isCompleted={invoice.isCompleted!}
+                />
+              </TableCell>
+
+              <TableCell className="text-right space-x-2">
+                {invoice.isCompleted ? null : <UpdateTodoBtn data={invoice} />}
+                <Button
+                  variant="destructive"
+                  onClick={() => dispatch(removeTodo(invoice.id))}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell
+              colSpan={5}
+              className="text-center font-semibold text-2xl"
+            >
+              No Todo
             </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );

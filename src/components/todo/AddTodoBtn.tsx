@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "../ui/textarea";
-import { handleSubmit } from "@/actions/handleSubmit";
+import { handleAddTodo } from "@/actions/handleSubmit";
 import { useAppDispatch } from "@/redux/hook";
 import { addTodo } from "@/redux/features/todoSlice";
 
@@ -32,7 +32,7 @@ export function AddTodoBtn() {
         </DialogHeader>
         <form
           action={async (formData) => {
-            const res = await handleSubmit(formData);
+            const res = await handleAddTodo(formData);
             console.log(res, "res");
             dispatch(addTodo(res));
           }}
